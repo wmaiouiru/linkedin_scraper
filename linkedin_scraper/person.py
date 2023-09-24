@@ -1,4 +1,4 @@
-import requests
+from typing import Dict, Any
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -8,11 +8,14 @@ from .objects import Experience, Education, Scraper, Interest, Accomplishment, C
 import os
 from linkedin_scraper import selectors
 
-
 class Person(Scraper):
 
     __TOP_CARD = "pv-top-card"
     __WAIT_FOR_ELEMENT_TIMEOUT = 5
+
+
+    linkedin_url: str
+    name: str
 
     def __init__(
         self,
@@ -392,3 +395,12 @@ class Person(Scraper):
             acc=self.accomplishments,
             conn=self.contacts,
         )
+
+    def to_dict(self) -> Dict[str, Any]:
+        # Get all attributes of the object
+        attributes = vars(self)
+        
+        # Filter attributes that don't start with an underscore _
+        filtered_attributes = {key: value for key, value in attributes.items() if not key.startswith('_')}
+        
+        return filtered_attributes
