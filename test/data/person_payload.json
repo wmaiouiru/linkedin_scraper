@@ -1,0 +1,75 @@
+{
+    "name": "John Doe",
+    "about": "Experienced professional seeking to make a positive impact",
+    "linkedin_url": "https://www.linkedin.com/company/1234/",
+    "experiences": [
+        {
+            "institution_name": "Stealth Tech",
+            "linkedin_url": "https://www.linkedin.com/company/12345678/",
+            "website": null,
+            "industry": "Technology",
+            "type": "Startup",
+            "headquarters": "Silicon Valley",
+            "company_size": 100,
+            "founded": 2019,
+            "from_date": "Jan 2022",
+            "to_date": "Present",
+            "description": "Skills: Data Engineering \u00b7 Apache Kafka \u00b7 Big Data",
+            "position_title": "Senior Data Engineer",
+            "duration": "2 years",
+            "location": "San Francisco, CA",
+            "position_type": "Full-time"
+        },
+        {
+            "institution_name": "Tech Investment Fund",
+            "linkedin_url": "https://www.linkedin.com/company/98765432/",
+            "website": null,
+            "industry": "Finance",
+            "type": "Investment Fund",
+            "headquarters": "New York",
+            "company_size": 50,
+            "founded": 2022,
+            "from_date": "Jun 2023",
+            "to_date": "Present",
+            "description": "Investing in innovative tech startups",
+            "position_title": "Investment Analyst",
+            "duration": "6 months",
+            "location": "New York, NY",
+            "position_type": "Part-time"
+        }
+    ],
+    "educations": [
+        {
+            "institution_name": "Tech University",
+            "linkedin_url": "https://www.linkedin.com/company/11111111/",
+            "website": null,
+            "industry": "Education",
+            "type": "University",
+            "headquarters": "City",
+            "company_size": 5000,
+            "founded": 2000,
+            "from_date": "2010",
+            "to_date": "2012",
+            "description": null,
+            "degree": "MS, Computer Science"
+        },
+        {
+            "institution_name": "Tech University",
+            "linkedin_url": "https://www.linkedin.com/company/11111111/",
+            "website": null,
+            "industry": "Education",
+            "type": "University",
+            "headquarters": "City",
+            "company_size": 5000,
+            "founded": 2000,
+            "from_date": "2006",
+            "to_date": "2010",
+            "description": null,
+            "degree": "Bachelor of Science, Computer Science"
+        }
+    ],
+    "interests": [],
+    "accomplishments": [],
+    "contacts": [],
+    "location": "San Francisco, California, United States"
+}

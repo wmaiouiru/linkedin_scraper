@@ -4,7 +4,7 @@ from .objects import Institution, Experience, Education, Contact
 from .company import Company
 from .jobs import Job
 from .job_search import JobSearch
-
+from .person_parsers import experience_parser, education_parser
 __version__ = "2.11.2"
 
 import glob

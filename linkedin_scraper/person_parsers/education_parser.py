@@ -14,8 +14,7 @@ class EducationParser:
         return educations
 
     def parse_education(self, education_div):
-        print(education_div.get_attribute('innerHTML'))
-        logging.info(education_div.get_attribute('innerHTML'))
+        logging.debug(education_div.get_attribute('innerHTML'))
 
         institution_linkedin_url = education_div.find_element(By.XPATH, './/a').get_attribute("href")
         education_elements = education_div.find_elements(By.XPATH, './/*[contains(@aria-hidden, "true")]')

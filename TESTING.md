@@ -1,8 +1,6 @@
 # Run the following to run unit tests
 `python -m unittest`
-
-
-`python ./test/test_person.py`
+`python -m unittest test.test_person`
 
 # Integration Tests
 `python ./test/scrape_person.py`
