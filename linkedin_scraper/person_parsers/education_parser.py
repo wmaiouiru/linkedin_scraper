@@ -19,12 +19,22 @@ class EducationParser:
         institution_linkedin_url = education_div.find_element(By.XPATH, './/a').get_attribute("href")
         education_elements = education_div.find_elements(By.XPATH, './/*[contains(@aria-hidden, "true")]')
 
+        index = 0
+        if 'search/results' in institution_linkedin_url:
+            index = 1
+        institution_name = education_elements[index].text.strip()
+        degree = None
+        from_date = None
+        to_date = None
 
-        institution_name = education_elements[0].text.strip()
-        degree = education_elements[1].text.strip()
-        from_to_date = education_elements[2].text.strip().split('-')
-        from_date = from_to_date[0].strip()
-        to_date = from_to_date[1].strip()
+        if len(education_elements) > index + 1:
+            degree = education_elements[index+1].text.strip()
+
+        if len(education_elements) > index + 2:
+            print(education_elements[index+2].text.strip())
+            from_to_date = education_elements[index+2].text.strip().split('-')
+            from_date = from_to_date[0].strip()
+            to_date = from_to_date[1].strip()
 
         description = None
         return Education(

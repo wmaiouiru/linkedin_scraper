@@ -287,10 +287,9 @@ class Person(Scraper):
         self.about = about
 
     def scrape_logged_in(self, close_on_complete=True):
-        driver = self.driver
         duration = None
 
-        root = WebDriverWait(driver, self.__WAIT_FOR_ELEMENT_TIMEOUT).until(
+        root = WebDriverWait(self.driver, self.__WAIT_FOR_ELEMENT_TIMEOUT).until(
             EC.presence_of_element_located(
                 (
                     By.CLASS_NAME,
@@ -298,8 +297,9 @@ class Person(Scraper):
                 )
             )
         )
-        self.focus()
-        self.wait(5)
+        if not self.use_profile_homepage:
+            self.focus()
+            self.wait(5)
 
         # get name and location
         self.get_name_and_location()
@@ -309,10 +309,10 @@ class Person(Scraper):
         # get about
         self.get_about()
 
-        driver.execute_script(
+        self.driver.execute_script(
             "window.scrollTo(0, Math.ceil(document.body.scrollHeight/2));"
         )
-        driver.execute_script(
+        self.driver.execute_script(
             "window.scrollTo(0, Math.ceil(document.body.scrollHeight/1.5));"
         )
 
@@ -321,13 +321,17 @@ class Person(Scraper):
 
         # get education
         self.get_educations()
+        if not self.use_profile_homepage:
+            self.scrape_additional_info()
+        if close_on_complete:
+            self.driver.quit()
 
-        driver.get(self.linkedin_url)
+    def scrape_additional_info(self):
+        self.driver.get(self.linkedin_url)
 
         # get interest
         try:
-
-            _ = WebDriverWait(driver, self.__WAIT_FOR_ELEMENT_TIMEOUT).until(
+            _ = WebDriverWait(self.driver, self.__WAIT_FOR_ELEMENT_TIMEOUT).until(
                 EC.presence_of_element_located(
                     (
                         By.XPATH,
@@ -335,7 +339,7 @@ class Person(Scraper):
                     )
                 )
             )
-            interestContainer = driver.find_element(By.XPATH,
+            interestContainer = self.driver.find_element(By.XPATH,
                 "//*[@class='pv-profile-section pv-interests-section artdeco-container-card artdeco-card ember-view']"
             )
             for interestElement in interestContainer.find_elements(By.XPATH, 
@@ -350,7 +354,7 @@ class Person(Scraper):
 
         # get accomplishment
         try:
-            _ = WebDriverWait(driver, self.__WAIT_FOR_ELEMENT_TIMEOUT).until(
+            _ = WebDriverWait(self.driver, self.__WAIT_FOR_ELEMENT_TIMEOUT).until(
                 EC.presence_of_element_located(
                     (
                         By.XPATH,
@@ -358,7 +362,7 @@ class Person(Scraper):
                     )
                 )
             )
-            acc = driver.find_element(By.XPATH,
+            acc = self.driver.find_element(By.XPATH,
                 "//*[@class='pv-profile-section pv-accomplishments-section artdeco-container-card artdeco-card ember-view']"
             )
             for block in acc.find_elements(By.XPATH, 
@@ -375,11 +379,11 @@ class Person(Scraper):
 
         # get connections
         try:
-            driver.get("https://www.linkedin.com/mynetwork/invite-connect/connections/")
-            _ = WebDriverWait(driver, self.__WAIT_FOR_ELEMENT_TIMEOUT).until(
+            self.driver.get("https://www.linkedin.com/mynetwork/invite-connect/connections/")
+            _ = WebDriverWait(self.driver, self.__WAIT_FOR_ELEMENT_TIMEOUT).until(
                 EC.presence_of_element_located((By.CLASS_NAME, "mn-connections"))
             )
-            connections = driver.find_element(By.CLASS_NAME, "mn-connections")
+            connections = self.driver.find_element(By.CLASS_NAME, "mn-connections")
             if connections is not None:
                 for conn in connections.find_elements(By.CLASS_NAME, "mn-connection-card"):
                     anchor = conn.find_element(By.CLASS_NAME, "mn-connection-card__link")
@@ -391,9 +395,6 @@ class Person(Scraper):
                     self.add_contact(contact)
         except:
             connections = None
-
-        if close_on_complete:
-            driver.quit()
 
     @property
     def company(self):

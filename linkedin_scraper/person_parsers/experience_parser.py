@@ -60,11 +60,12 @@ class ExperienceParser:
             position_type = company_and_type_split[1].strip()
         return company_name, position_type
 
-    def get_company_location(self, position_elements, element_index):
-        return position_elements[element_index+3].text
-
     def get_position_title(self, position_elements, element_index):
         return position_elements[element_index].text
+
+    def get_company_location(self, position_elements, element_index):
+        if len(position_elements) >= element_index + 4:
+            return position_elements[element_index+3].text
 
     def get_description(self, position_elements, element_index):
         description = None

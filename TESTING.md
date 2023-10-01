@@ -3,4 +3,4 @@
 `python -m unittest test.test_person`
 
 # Integration Tests
-`python ./test/scrape_person.py`
+`LINKEDIN_EMAIL="<email>" LINKEDIN_PASSWORD="<password>" && python ./test/scrape_person.py`
