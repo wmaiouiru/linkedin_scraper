@@ -1,4 +1,7 @@
-import __init__
+"""
+Test Person
+"""
+import test
 import os
 import json
 from selenium import webdriver
@@ -12,8 +15,16 @@ class TestPerson(unittest.TestCase):
     """
     Test Person
     """
-    def test_person(self):
+    @classmethod
+    def setUpClass(cls):
+        # Configure logging settings
         logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+
+    def test_person(self):
+        """
+        From HTML
+        """
+
         driver = webdriver.Chrome()
 
         # Get the current working directory
@@ -50,8 +61,20 @@ class TestPerson(unittest.TestCase):
         # Clean up and close the WebDriver
         person.get_educations()
         self.assertGreaterEqual(len(person.educations), 1)
-        print(json.dumps(person.to_dict(), indent=2))
+        logging.debug(json.dumps(person.to_dict(), indent=2))
         
         driver.quit()
+
+    def test_from_dict(self) -> None:
+        """
+        From Dict
+        """
+        current_dir = os.getcwd()
+        file_path = os.path.join(current_dir, 'test/data/person_payload.json')
+        # Open and read the JSON file
+        with open(file_path, 'r') as file:
+            data_dict = json.load(file)        
+            person = Person.from_dict(data_dict)
+
 if __name__ == "__main__":
     unittest.main()

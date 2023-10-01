@@ -1,3 +1,7 @@
+"""
+Object Models
+"""
+from __future__ import annotations
 from dataclasses import dataclass
 from time import sleep
 
@@ -40,6 +44,34 @@ class Experience(Institution):
     location: str = None
     position_type: str = None
 
+    @staticmethod
+    def from_payload(payload) -> Experience:
+        # Extract Institution attributes from payload
+        institution_attrs = {
+            'institution_name': payload.get('institution_name'),
+            'linkedin_url': payload.get('linkedin_url'),
+            'website': payload.get('website'),
+            'industry': payload.get('industry'),
+            'type': payload.get('type'),
+            'headquarters': payload.get('headquarters'),
+            'company_size': payload.get('company_size'),
+            'founded': payload.get('founded')
+        }
+
+        # Extract Experience attributes from payload
+        experience_attrs = {
+            'from_date': payload.get('from_date'),
+            'to_date': payload.get('to_date'),
+            'description': payload.get('description'),
+            'position_title': payload.get('position_title'),
+            'duration': payload.get('duration'),
+            'location': payload.get('location'),
+            'position_type': payload.get('position_type')
+        }
+
+        # Create an instance of Experience with both sets of attributes
+        return Experience(**institution_attrs, **experience_attrs)
+
 @dataclass
 class Education(Institution):
     from_date: str = None
@@ -47,6 +79,30 @@ class Education(Institution):
     description: str = None
     degree: str = None
 
+    @staticmethod
+    def from_payload(payload) -> Education:
+        # Extract Institution attributes from payload
+        institution_attrs = {
+            'institution_name': payload.get('institution_name'),
+            'linkedin_url': payload.get('linkedin_url'),
+            'website': payload.get('website'),
+            'industry': payload.get('industry'),
+            'type': payload.get('type'),
+            'headquarters': payload.get('headquarters'),
+            'company_size': payload.get('company_size'),
+            'founded': payload.get('founded')
+        }
+
+        # Extract Education attributes from payload
+        education_attrs = {
+            'from_date': payload.get('from_date'),
+            'to_date': payload.get('to_date'),
+            'description': payload.get('description'),
+            'degree': payload.get('degree')
+        }
+
+        # Create an instance of Education with both sets of attributes
+        return Education(**institution_attrs, **education_attrs)
 
 @dataclass
 class Interest(Institution):

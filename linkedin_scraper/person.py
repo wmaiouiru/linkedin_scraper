@@ -1,3 +1,7 @@
+"""
+Person Scraper
+"""
+from __future__ import annotations
 from typing import Dict, Any
 
 from selenium import webdriver
@@ -426,6 +430,7 @@ class Person(Scraper):
 
     def to_dict(self) -> Dict[str, Any]:
         return to_dict({
+            'linkedin_url' : self.linkedin_url,
             'name': self.name,
             'about': self.about,
             'experiences': self.experiences,
@@ -435,3 +440,25 @@ class Person(Scraper):
             'contacts': self.contacts,
             'location': self.location
         })
+    @staticmethod
+    def from_dict(payload) -> Person:
+        person = Person(
+            linkedin_url=payload['linkedin_url'],
+            name=payload['name'],
+            about=payload['about'],
+            experiences=[Experience.from_payload(payload) for payload in payload['experiences']],
+            educations=[Education.from_payload(payload) for payload in payload['educations']],
+            interests=None,
+            accomplishments=None,
+            company=None,
+            job_title=None,
+            contacts=None,
+            driver=None,
+            get=False,
+            scrape=False,
+            close_on_complete=True,
+            time_to_wait_after_login=0,
+            use_profile_homepage=False,
+        )
+        person.add_location(payload['location'])
+        return person
