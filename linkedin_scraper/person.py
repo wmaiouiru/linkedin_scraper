@@ -8,6 +8,8 @@ from selenium.common.exceptions import NoSuchElementException
 from .objects import Experience, Education, Scraper, Interest, Accomplishment, Contact
 from .utils import to_dict
 import os
+from linkedin_scraper.person_parsers.experience_parser import ExperienceParser
+from linkedin_scraper.person_parsers.education_parser import EducationParser
 from linkedin_scraper import selectors
 
 class Person(Scraper):
@@ -18,6 +20,10 @@ class Person(Scraper):
 
     linkedin_url: str
     name: str
+    location: str
+
+
+    open_to_work: bool
 
     def __init__(
         self,
@@ -36,6 +42,7 @@ class Person(Scraper):
         scrape=True,
         close_on_complete=True,
         time_to_wait_after_login=0,
+        use_profile_homepage=False
     ):
         self.linkedin_url = linkedin_url
         self.name = name
@@ -46,7 +53,7 @@ class Person(Scraper):
         self.accomplishments = accomplishments or []
         self.also_viewed_urls = []
         self.contacts = contacts or []
-
+        self.use_profile_homepage = use_profile_homepage
         if driver is None:
             try:
                 if os.getenv("CHROMEDRIVER") == None:
@@ -105,13 +112,13 @@ class Person(Scraper):
         except Exception as e:
             pass
 
-    def is_open_to_work(self):
+    def get_open_to_work(self):
         try:
-            return "#OPEN_TO_WORK" in self.driver.find_element(By.CLASS_NAME,"pv-top-card-profile-picture").find_element(By.TAG_NAME,"img").get_attribute("title")
+            self.open_to_work = "#OPEN_TO_WORK" in self.driver.find_element(By.CLASS_NAME,"pv-top-card-profile-picture").find_element(By.TAG_NAME,"img").get_attribute("title")
         except:
-            return False
+            self.open_to_work = False
 
-    def get_experiences(self):
+    def navigate_to_experience(self):
         url = os.path.join(self.linkedin_url, "details/experience")
         self.driver.get(url)
         self.focus()
@@ -119,6 +126,17 @@ class Person(Scraper):
         self.scroll_to_half()
         self.scroll_to_bottom()
         main_list = self.wait_for_element_to_load(name="pvs-list", base=main)
+        return main_list
+
+    def get_experiences(self):
+        if self.use_profile_homepage:
+            experiences = ExperienceParser().parse(self.driver)
+            if experiences:
+                for experience in experiences:
+                    self.add_experience(experience)
+            return
+
+        main_list = self.navigate_to_experience()
         for position in main_list.find_elements(By.XPATH,"li"):
             position = position.find_element(By.CLASS_NAME,"pvs-entity")
             company_logo_elem, position_details = position.find_elements(By.XPATH,"*")
@@ -199,6 +217,13 @@ class Person(Scraper):
                 self.add_experience(experience)
 
     def get_educations(self):
+        if self.use_profile_homepage:
+            educations = EducationParser().parse(self.driver)
+            if educations:
+                for education in educations:
+                    self.add_education(education)
+            return
+
         url = os.path.join(self.linkedin_url, "details/education")
         self.driver.get(url)
         self.focus()
@@ -246,7 +271,7 @@ class Person(Scraper):
 
     def get_name_and_location(self):
         top_panels = self.driver.find_elements(By.CLASS_NAME,"pv-text-details__left-panel")
-        self.name = top_panels[0].find_elements(By.XPATH,"*")[0].text
+        self.name = top_panels[0].find_element(By.CSS_SELECTOR, 'h1.text-heading-xlarge').text
         self.location = top_panels[1].find_element(By.TAG_NAME,"span").text
 
 
@@ -275,10 +300,11 @@ class Person(Scraper):
         # get name and location
         self.get_name_and_location()
 
-        self.open_to_work = self.is_open_to_work()
+        self.get_open_to_work()
 
         # get about
         self.get_about()
+
         driver.execute_script(
             "window.scrollTo(0, Math.ceil(document.body.scrollHeight/2));"
         )
@@ -407,4 +433,5 @@ class Person(Scraper):
             'interests': self.interests,
             'accomplishments': self.accomplishments,
             'contacts': self.contacts,
+            'location': self.location
         })

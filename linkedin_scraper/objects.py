@@ -38,7 +38,7 @@ class Experience(Institution):
     position_title: str = None
     duration: str = None
     location: str = None
-
+    position_type: str = None
 
 @dataclass
 class Education(Institution):
