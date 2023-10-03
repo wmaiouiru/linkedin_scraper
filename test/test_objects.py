@@ -12,9 +12,12 @@ class TestObjects(unittest.TestCase):
     """
     Test Objects
     """
-    def test_experience(self):
-        logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+    @classmethod
+    def setUpClass(cls):
+        # Configure logging settings
+        logging.basicConfig(format='%(levelname)s:%(filename)s:%(lineno)d:%(message)s', level=logging.INFO)
 
+    def test_experience(self):
         payload = {
             "institution_name": "test name",
             "linkedin_url": "https://www.linkedin.com/company/test/",

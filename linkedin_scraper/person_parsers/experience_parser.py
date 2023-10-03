@@ -23,7 +23,6 @@ class ExperienceParser:
         # company_linkedin_url = position.find_element(By.XPATH,"*").get_attribute("href")
         company_linkedin_url = position.find_element(By.CSS_SELECTOR, 'a[data-field="experience_company_logo"]').get_attribute("href")
         position_elements = position.find_elements(By.XPATH, './/*[contains(@aria-hidden, "true")]')
-
         element_index = 0
         if 'search/results' in company_linkedin_url:
             element_index+= 1
@@ -44,7 +43,7 @@ class ExperienceParser:
             to_date=to_date,
             duration=duration,
             location=self.get_company_location(position_elements, element_index),
-            description=self.get_description(position_elements, element_index),
+            description=self.get_description(position),
             position_type=position_type,
             institution_name=company_name,
             linkedin_url=company_linkedin_url
@@ -67,8 +66,11 @@ class ExperienceParser:
         if len(position_elements) >= element_index + 4:
             return position_elements[element_index+3].text
 
-    def get_description(self, position_elements, element_index):
-        description = None
-        if len(position_elements) == element_index + 5:
-            description = position_elements[element_index+4].text
-        return description
+    def get_description(self, position):
+        try:
+            position_description_div = position\
+                .find_element(By.XPATH, """.//*[contains(@class, 'inline-show-more-text')]""")\
+                .find_element(By.XPATH, './/*[contains(@aria-hidden, "true")]')
+            return position_description_div.text
+        except:
+            return None
