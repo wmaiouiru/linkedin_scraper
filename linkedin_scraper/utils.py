@@ -15,7 +15,7 @@ def custom_asdict(obj):
             obj_dict[field.name] = to_dict(value)
     return obj_dict
 
-def to_dict(obj) -> Dict[str, Any]:    
+def to_dict(obj) -> Dict[str, Any]:
     if is_dataclass(obj):
         # If the object is a data class, use asdict to convert it to a dictionary
         return to_dict(custom_asdict(obj))

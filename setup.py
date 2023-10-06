@@ -18,7 +18,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup( 
     name = 'linkedin_scraper', 
-    packages = ['linkedin_scraper'], # this must be the same as the name above 
+    packages = find_packages(), 
     version = version, 
     description = 'Scrapes user data from Linkedin', 
     long_description = long_description,
